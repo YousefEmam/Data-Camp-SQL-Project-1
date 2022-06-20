@@ -1,0 +1,58 @@
+--inspect the first 10 rows of the database
+select * 
+from schools
+LIMIT 10;
+
+--Count the number of schools not reporting the percentage of students tested and the total number of schools in the database.
+
+select count(*) - count(percent_tested) as num_tested_missing, count(*) as num_schools
+from schools
+
+--Find how many unique schools there are based on building code.
+
+select count(distinct building_code ) as num_school_buildings 
+from schools
+
+--Filter the database for all schools with math scores of at least 640.
+
+select school_name , average_math
+from schools 
+where average_math >=640 
+order by average_math desc;
+
+--Find the lowest average reading score.
+
+select min(average_reading) as lowest_reading 
+from schools
+
+--Filter the database for the top-performing school, as measured by average writing scores.
+
+select school_name, average_writing as max_writing
+from schools
+group by school_name 
+order by max_writing desc
+limit 1;
+
+--Create total SAT scores and find the top 10 best schools.
+
+select school_name, sum(average_math+average_reading+average_writing)  as average_sat
+from schools
+group by school_name
+order by average_sat desc
+limit 10;
+
+--Find out how NYC SAT performance varies by borough.
+
+select borough, count(*)as num_schools , sum(average_math+ average_reading+average_writing) / count(*) as average_borough_sat
+from schools
+group by borough
+order by average_borough_sat desc;
+
+--Find the top five best schools in Brooklyn by math score.
+
+select school_name, average_math 
+from schools 
+where borough = 'Brooklyn'
+group by school_name
+order by average_math desc
+limit 5;
